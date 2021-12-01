@@ -8,10 +8,10 @@ import org.jsoup.select.Elements;
 public class SqlRuParse {
     public static void main(String[] args) throws Exception {
         Document doc = Jsoup.connect("https://www.sql.ru/forum/job-offers").get();
-        Elements row = doc.select(".forumTable").get(0).children().get(0).children();
+        Elements row = doc.getElementsByTag("tbody").get(2).children();
         for (Element tr : row) {
-            Elements parseLink = tr.select(".postslisttopic");
-            for (Element td : parseLink) {
+            Elements post = tr.select(".postslisttopic");
+            for (Element td : post) {
                 Element href = td.child(0);
                 System.out.println(href.attr("href"));
                 System.out.println(href.text());
