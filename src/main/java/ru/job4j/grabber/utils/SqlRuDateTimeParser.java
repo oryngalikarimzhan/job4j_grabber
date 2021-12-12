@@ -2,7 +2,6 @@ package ru.job4j.grabber.utils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Map;
 
 public class SqlRuDateTimeParser implements DateTimeParser {
@@ -28,22 +27,19 @@ public class SqlRuDateTimeParser implements DateTimeParser {
 
     @Override
     public LocalDateTime parse(String parse) {
+        String rsl;
         String[] parseSplit = parse.split("[, ]+");
-        Arrays.stream(parseSplit).forEach(System.out::println);
-        System.out.println(parseSplit.length);
         if ("сегодня".equals(parseSplit[0])) {
             String[] today = LocalDateTime.now()
                     .format(formatter)
                     .split(" ");
-            String rsl = today[0] + " " + parseSplit[1];
-            return LocalDateTime.parse(rsl, formatter);
+            rsl = today[0] + " " + parseSplit[1];
         } else if ("вчера".equals(parseSplit[0])) {
             String[] yesterday = LocalDateTime.now()
                     .minusDays(1)
                     .format(formatter)
                     .split(" ");
-            String rsl = yesterday[0] + " " + parseSplit[1];
-            return LocalDateTime.parse(rsl, formatter);
+            rsl = yesterday[0] + " " + parseSplit[1];
         } else {
             for (Map.Entry<String, String> entry : MONTHS.entrySet()) {
                 if (parseSplit[1].equals(entry.getValue())) {
@@ -53,11 +49,11 @@ public class SqlRuDateTimeParser implements DateTimeParser {
             if (parseSplit[0].length() == 1) {
                 parseSplit[0] = "0" + parseSplit[0];
             }
-            String rsl = "20" + parseSplit[2]
+            rsl = "20" + parseSplit[2]
                     + "-" + parseSplit[1]
                     + "-" + parseSplit[0]
                     + " " + parseSplit[3];
-            return LocalDateTime.parse(rsl, formatter);
         }
+        return LocalDateTime.parse(rsl, formatter);
     }
 }
