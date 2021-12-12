@@ -15,12 +15,11 @@ import static org.quartz.SimpleScheduleBuilder.*;
 
 public class AlertRabbit {
 
-    private static int interval;
     private static Connection connection;
 
     public static void main(String[] args) {
         try {
-            propertyReader();
+            int interval = propertyReader();
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
             JobDataMap data = new JobDataMap();
@@ -43,18 +42,19 @@ public class AlertRabbit {
         }
     }
 
-    public static void propertyReader() {
+    public static int propertyReader() {
         try (InputStream in = AlertRabbit.class.getClassLoader()
                 .getResourceAsStream("rabbit.properties")) {
             Properties config = new Properties();
             config.load(in);
-            interval = Integer.parseInt(config.getProperty("rabbit.interval"));
+            int interval = Integer.parseInt(config.getProperty("rabbit.interval"));
             Class.forName(config.getProperty("rabbit.driver"));
             connection = DriverManager.getConnection(
                     config.getProperty("rabbit.url"),
                     config.getProperty("rabbit.username"),
                     config.getProperty("rabbit.password")
             );
+            return interval;
 
         } catch (Exception e) {
             throw new IllegalStateException(e);
