@@ -22,18 +22,9 @@ public class SqlRuParse implements Parse {
     @Override
     public List<Post> list(String link) throws Exception {
         List<Post> rsl = new ArrayList<>();
-        Document doc = Jsoup.connect(link).get();
-        int max = Integer.parseInt(
-                doc.getElementsByTag("tbody")
-                        .get(3)
-                        .child(0)
-                        .child(0)
-                        .child(10)
-                        .text()
-        );
-        for (int i = 1; i != max; i++) {
+        for (int i = 1; i != 5; i++) {
             String path = String.format(link + "%s", i);
-            doc = Jsoup.connect(path).get();
+            Document doc = Jsoup.connect(path).get();
             Elements row = doc.select(".postslisttopic");
             for (Element td : row) {
                 Element href = td.child(0);
