@@ -2,8 +2,6 @@ package ru.job4j.quartz;
 
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.time.LocalDate;
@@ -15,11 +13,12 @@ import static org.quartz.SimpleScheduleBuilder.*;
 
 public class AlertRabbit {
 
-    private static Connection connection;
-
     public static void main(String[] args) {
-        try {
-            int interval = propertyReader();
+        Properties config = propertyReader();
+        try (Connection connection = DriverManager.getConnection(
+                config.getProperty("rabbit.url"),
+                config.getProperty("rabbit.username"),
+                config.getProperty("rabbit.password"))) {
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
             JobDataMap data = new JobDataMap();
@@ -28,7 +27,7 @@ public class AlertRabbit {
                     .usingJobData(data)
                     .build();
             SimpleScheduleBuilder times = simpleSchedule()
-                    .withIntervalInSeconds(interval)
+                    .withIntervalInSeconds(Integer.parseInt(config.getProperty("rabbit.interval")))
                     .repeatForever();
             Trigger trigger = newTrigger()
                     .startNow()
@@ -42,20 +41,13 @@ public class AlertRabbit {
         }
     }
 
-    public static int propertyReader() {
+    public static Properties propertyReader() {
         try (InputStream in = AlertRabbit.class.getClassLoader()
                 .getResourceAsStream("rabbit.properties")) {
             Properties config = new Properties();
             config.load(in);
-            int interval = Integer.parseInt(config.getProperty("rabbit.interval"));
             Class.forName(config.getProperty("rabbit.driver"));
-            connection = DriverManager.getConnection(
-                    config.getProperty("rabbit.url"),
-                    config.getProperty("rabbit.username"),
-                    config.getProperty("rabbit.password")
-            );
-            return interval;
-
+            return config;
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
