@@ -1,4 +1,4 @@
-package ru.job4j.grabber.utils;
+package ru.job4j;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -7,6 +7,8 @@ import org.jsoup.safety.Whitelist;
 
 import java.time.LocalDateTime;
 import org.jsoup.nodes.Document.OutputSettings;
+import ru.job4j.grabber.Post;
+import ru.job4j.grabber.utils.SqlRuDateTimeParser;
 
 public class PostParser {
 

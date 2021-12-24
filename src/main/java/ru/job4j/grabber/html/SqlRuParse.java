@@ -5,8 +5,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
+import ru.job4j.grabber.Parse;
 import ru.job4j.grabber.utils.DateTimeParser;
-import ru.job4j.grabber.utils.Post;
+import ru.job4j.grabber.Post;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
