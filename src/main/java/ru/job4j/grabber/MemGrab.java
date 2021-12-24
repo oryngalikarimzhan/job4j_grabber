@@ -14,7 +14,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 public class MemGrab implements Grab {
     @Override
-    public void init(Parse parse, Store store, Scheduler scheduler) throws SchedulerException {
+    public void init(Parse parse, Store store, Scheduler scheduler) {
         try {
             scheduler.start();
             JobDataMap data = new JobDataMap();
@@ -31,7 +31,7 @@ public class MemGrab implements Grab {
                     .withSchedule(times)
                     .build();
             scheduler.scheduleJob(job, trigger);
-            Thread.sleep(10000);
+            Thread.sleep(1000000);
             scheduler.shutdown();
         } catch (Exception e) {
             e.printStackTrace();
@@ -40,7 +40,7 @@ public class MemGrab implements Grab {
 
     public static class SqlRu implements Job {
         @Override
-        public void execute(JobExecutionContext context) throws JobExecutionException {
+        public void execute(JobExecutionContext context) {
             SqlRuParse sqlRuParse = (SqlRuParse) context
                     .getJobDetail()
                     .getJobDataMap()
@@ -56,16 +56,16 @@ public class MemGrab implements Grab {
                 e.printStackTrace();
             }
             posts.forEach(memStore::save);
-
+            memStore.getAll().forEach(System.out::println);
+            System.out.println(memStore.findById(10));
         }
     }
 
-    public static void main(String[] args) throws SchedulerException {
-        Parse sqlRuParse = new SqlRuParse(new SqlRuDateTimeParser());
+    public static void main(String[] args) throws Exception {
+      Parse sqlRuParse = new SqlRuParse(new SqlRuDateTimeParser());
         Store memStore = new MemStore();
         Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
         Grab sqlRuGrab = new MemGrab();
         sqlRuGrab.init(sqlRuParse, memStore, scheduler);
-        System.out.println(memStore.getAll());
     }
 }

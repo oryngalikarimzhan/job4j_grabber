@@ -67,12 +67,13 @@ public class Post {
 
     @Override
     public String toString() {
-        return "Post{"
-                + "id=" + id
-                + ", title='" + title + '\''
-                + ", link='" + link + '\''
-                + ", description='" + description + '\''
-                + ", created=" + created
+        String ln = System.lineSeparator();
+        return "Post{" + ln
+                + "___________________id_________________" + ln + id + ln
+                + "__________________title_______________" + ln + title + ln
+                + "__________________link________________" + ln + link + ln
+                + "________________description___________" + ln + description + ln
+                + "_________________created______________" + ln + created + ln
                 + '}';
     }
 

@@ -12,6 +12,7 @@ import ru.job4j.grabber.Post;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class SqlRuParse implements Parse {
     private final DateTimeParser dateTimeParser;
@@ -29,8 +30,9 @@ public class SqlRuParse implements Parse {
             Elements row = doc.select(".postslisttopic");
             for (Element td : row) {
                 Element href = td.child(0);
-                String title = href.text();
-                if (title.contains("java") && !title.contains("javascript")) {
+                String title = href.text().toLowerCase(Locale.ROOT);
+
+                if ((title.contains("java")) && !title.contains("javascript")) {
                     String postUrl = href.attr("href");
                     rsl.add(detail(postUrl));
                 }
@@ -60,6 +62,6 @@ public class SqlRuParse implements Parse {
                 .substring(0, 17);
         LocalDateTime created = dateTimeParser.parse(date);
 
-        return new Post(link, title, description, created);
+        return new Post(title, link, description, created);
     }
 }
