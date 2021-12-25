@@ -5,39 +5,39 @@ import java.util.Objects;
 
 public class Post {
     private int id;
-    private String title;
+    private String name;
     private String link;
-    private String description;
+    private String text;
     private LocalDateTime created;
 
-    public Post(String title, String link, String description, LocalDateTime created) {
-        this.title = title;
+    public Post(String name, String link, String text, LocalDateTime created) {
+        this.name = name;
         this.link = link;
-        this.description = description;
+        this.text = text;
         this.created = created;
     }
 
-    public Post(int id, String title, String link, String description, LocalDateTime created) {
+    public Post(int id, String name, String text, String link, LocalDateTime created) {
         this.id = id;
-        this.title = title;
+        this.name = name;
         this.link = link;
-        this.description = description;
+        this.text = text;
         this.created = created;
     }
     public int getId() {
         return id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
     public String getLink() {
         return link;
     }
 
-    public String getDescription() {
-        return description;
+    public String getText() {
+        return text;
     }
 
     public LocalDateTime getCreated() {
@@ -57,12 +57,12 @@ public class Post {
             return false;
         }
         Post post = (Post) o;
-        return id == post.id && Objects.equals(title, post.title) && Objects.equals(link, post.link);
+        return id == post.id && Objects.equals(name, post.name) && Objects.equals(link, post.link);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, link);
+        return Objects.hash(id, name, link);
     }
 
     @Override
@@ -70,9 +70,9 @@ public class Post {
         String ln = System.lineSeparator();
         return "Post{" + ln
                 + "___________________id_________________" + ln + id + ln
-                + "__________________title_______________" + ln + title + ln
+                + "__________________name________________" + ln + name + ln
                 + "__________________link________________" + ln + link + ln
-                + "________________description___________" + ln + description + ln
+                + "__________________text________________" + ln + text + ln
                 + "_________________created______________" + ln + created + ln
                 + '}';
     }
