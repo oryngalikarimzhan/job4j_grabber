@@ -21,7 +21,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 public class DatabaseGrab implements Grab {
     @Override
-    public void init(Parse parse, Store store, Scheduler scheduler) throws SchedulerException {
+    public void init(Parse parse, Store store, Scheduler scheduler) {
         try (Connection connection = initConnection()) {
             scheduler.start();
             JobDataMap data = new JobDataMap();
@@ -63,7 +63,7 @@ public class DatabaseGrab implements Grab {
 
     public static class SqlRu implements Job {
         @Override
-        public void execute(JobExecutionContext context) throws JobExecutionException {
+        public void execute(JobExecutionContext context) {
             SqlRuParse sqlRuParse = (SqlRuParse) context
                     .getJobDetail()
                     .getJobDataMap()
@@ -97,6 +97,4 @@ public class DatabaseGrab implements Grab {
             }
         }
     }
-
-
 }
