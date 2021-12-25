@@ -3,7 +3,6 @@ package ru.job4j.grabber;
 import ru.job4j.grabber.html.SqlRuParse;
 import ru.job4j.grabber.utils.SqlRuDateTimeParser;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;

@@ -6,6 +6,7 @@ import ru.job4j.grabber.html.SqlRuParse;
 import ru.job4j.grabber.utils.SqlRuDateTimeParser;
 import ru.job4j.quartz.AlertRabbit;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -38,15 +39,14 @@ public class DatabaseGrab implements Grab {
                     .withSchedule(times)
                     .build();
             scheduler.scheduleJob(job, trigger);
-            Thread.sleep(10000);
-            scheduler.shutdown();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static Connection initConnection() {
-        try (InputStream in = AlertRabbit.class.getClassLoader()
+        try (InputStream in = DatabaseGrab.class.getClassLoader()
                 .getResourceAsStream("rabbit.properties")) {
             Properties config = new Properties();
             config.load(in);
@@ -68,7 +68,7 @@ public class DatabaseGrab implements Grab {
                     .getJobDetail()
                     .getJobDataMap()
                     .get("parse");
-            DatabaseStore dbStore = (DatabaseStore) context
+            PsqlStore dbStore = (PsqlStore) context
                     .getJobDetail()
                     .getJobDataMap()
                     .get("store");
@@ -89,7 +89,7 @@ public class DatabaseGrab implements Grab {
                 e.printStackTrace();
             }
             try {
-                dbStore.connect(connection);
+
                 List<Post> posts = sqlRuParse.list("http://www.sql.ru/forum/job-offers/");
                 posts.forEach(dbStore::save);
             } catch (Exception e) {
@@ -98,12 +98,5 @@ public class DatabaseGrab implements Grab {
         }
     }
 
-    public static void main(String[] args) throws SchedulerException {
-        Parse sqlRuParse = new SqlRuParse(new SqlRuDateTimeParser());
-        Store dbStore = new DatabaseStore();
-        Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
-        Grab sqlRuGrab = new DatabaseGrab();
-        sqlRuGrab.init(sqlRuParse, dbStore, scheduler);
 
-    }
 }
